@@ -14,7 +14,7 @@ class Gamestate:
         self.move = move
     
     def __str__(self) -> str:
-        pass
+        return f"board is {self.board}, player symbol is {self.player}, move to get to it is {self.move}"
 
     
     def heuristic(self) -> int:
@@ -35,6 +35,8 @@ class Gamestate:
         
         return possible_wins
     
+    def get_symbol(self):
+        return self.player
         
     def other(self):
         """ get opponent's symbol """
@@ -53,8 +55,8 @@ class Gamestate:
         for i in range(len(self.board)):
             if ut.check_valid_move(i+1, self.board, debug=False):
                 board = copy.deepcopy(self.board)
-                board[i] = self.player
-                child = Gamestate(board, self.other, i)
+                board[i] = self.get_symbol()
+                child = Gamestate(board, self.other(), i)
                 children.append(child)
             board = []
         return children
@@ -64,13 +66,20 @@ class Gamestate:
         """ minimax search agent, usues simply heuristic function and searches terminally. returns next best move """
 
         # check if node is terminal node (i.e. win state)
-        if ut.check_winner(self.player, self.board) or ut.check_winner(self.other, self.board):
-            print("win")
-            return (-1) ** (not maximising)
+        if ut.check_winner(self.get_symbol(), self.board):
+            if maximising:
+                return 1
+            else:
+                return -1
+        
+        if ut.check_winner(self.other(), self.board):
+            if maximising:
+                return -1
+            else:
+                return 1
 
         # check if no valid moves left
         if not (" " in self.board):
-            print("draw")
             return 0
         
         

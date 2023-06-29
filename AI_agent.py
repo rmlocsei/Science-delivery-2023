@@ -6,7 +6,6 @@ from math import inf
 class AI_agent:
     def __init__(self, board, player) -> None:
         self.Gamestates = []
-        self.best_move = 0 # best move it can find
         self.board = board # current board
         self.player = player
 
@@ -23,4 +22,5 @@ class AI_agent:
             evaluations.append((child.minimax(False), child.move))
 
         # 3. from list of children, return move that has highest value :)))
-        self.best_move = max(evaluations)[1]
+        best_move = max(evaluations)[1]
+        return best_move
