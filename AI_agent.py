@@ -15,7 +15,7 @@ class AI_agent:
         """ searches for best move, returns best next move """
 
         # 1. need to create the first Gamestate
-        initial_GS = gs.Gamestate([], self.board, self.player, -1, inf) # -1 as no move is picked yet
+        initial_GS = gs.Gamestate(self.board, self.player, -1) # -1 as no move is picked yet
 
         # 2. need to perform first level of search
         evaluations = []

@@ -1,80 +1,95 @@
 # naughts and crosses by Rose-Maree Locsei 2023 for Science Delivery
 
+import AI_agent as ai
+import Gamestate as gs
+import utility as ut
+
+
 LEN_BOARD = 9
-def print_board(board):
-    print("-" * 13)
-    print("| " + board[0] + " | " + board[1] + " | " + board[2] + " |")
-    print("-" * 13)
-    print("| " + board[3] + " | " + board[4] + " | " + board[5] + " |")
-    print("-" * 13)
-    print("| " + board[6] + " | " + board[7] + " | " + board[8] + " |")
-    print("-" * 13)
-
-def make_move(player, board):
-    """ makes move on board """
-    while True:
-        move = int(input("Player2: Enter a move between 1 and 9: "))
-        if check_valid_move(move, board):
-            board[move - 1] = player
-            print_board(board)
-            break
-
-
-def check_valid_move(move, board):
-    """ checks if move is valid """
-    valid = True
-    if (move > LEN_BOARD) or (move < 1):
-        print("Try a different move, this square is out of range!")
-        valid = False
-    if board[move - 1] != " ":
-        print("This square is taken, try a different square!")
-        valid = False
-    return valid
-
-
-def check_winner(player, board):
-    """ checks if player has won game """
-    WIN = True
-    winning_combo = [(0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 1, 2), \
-                     (3, 4, 5), (6, 7, 8), (0, 4, 8), (2, 4, 6)]
-
-    for combo in winning_combo:
-        if board[combo[0]] == board[combo[1]] == board[combo[2]] == player:
-            return WIN
-    return not WIN
+HUMAN = 0
+RANDOM_AGENT = 1
+AI_AGENT = 2
+SYMBOL = 0
+AGENT = 1
 
 def initiate_game():
     """ begin game """
-    player1 = input("Enter the symbol you wish to play as (0 or X): ")
-    if player1 == "0":
-        player2 = "x"
+
+    player1, player2 = (0,0), (0,0)
+    opponent = input("Who do you wish to play? Enter 0 for human, 1 for random agent, or 2 for AI agent.")
+    player1[SYMBOL] = int(input("Player1: Enter the symbol you wish to play as (0 or X): "))
+    player1[AGENT] = int(input("Player1: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent."))
+    player2[AGENT] = int(input("Player2: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent."))
+    if player1[SYMBOL] == "0":
+        player2[SYMBOL] = "x"
     else:
-        player2 = "0"
+        player2[SYMBOL] = "0"
     board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
-    return (player1, player2, board)
 
-player1, player2, board = initiate_game()
-
-num_turns = 0
-move = 0
-game_over = False
-while True:
-    if num_turns >= 9:
-        print("No one wins :(")
-        break
-
-    # player2's turn
-    if num_turns % 2:
-        player = player2
-    else:
-        player = player1
+    # now we play
+    if opponent == HUMAN:
+        return 
+    elif opponent == RANDOM_AGENT:
+        return
+    elif opponent == AI_AGENT:
+        return
+    return 
     
-    make_move(player, board)
-    if check_winner(player, board):
-        print(player + " wins!")
-        break
+def play_human(player1, player2, board):
+    """ if user chooses to play another human, then we play using this simple function """
+
+    num_turns = 0
+    while True:
+        if num_turns >= 9:
+            print("No one wins :(")
+            break
+
+        # player2's turn
+        if num_turns % 2:
+            player = player2
+        else:
+            player = player1
     
-    num_turns += 1
+        make_move(player, board)
+        if check_winner(player, board):
+            print(player + " wins!")
+            break
+    
+        num_turns += 1  
+
+def play_random(player1, player2, board):
+    """ if user chooses to play random agent, then we just need to chooses 
+            to randomly place pieces from available ones """
+    num_turns = 0
+    while True:
+        if num_turns >= 9:
+            print("No one wins :(")
+            break
+
+        # player2's turn
+        if num_turns % 2:
+            player = player2
+        else:
+            player = player1
+    
+        make_move(player, board)
+        if check_winner(player, board):
+            print(player + " wins!")
+            break
+    
+        num_turns += 1  
+
+# player1, player2, board, opponent = initiate_game()
+board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+play = ai.AI_agent(board, "0")
+play.search()
+print(play.best_move)
+
+
+
+
+
+
 
 
 
