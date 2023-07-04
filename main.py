@@ -17,8 +17,8 @@ def initiate_game():
 
     player1, player2 = [0,0], [0,0]
     player1[SYMBOL] = input("Player1: Enter the symbol you wish to play as (0 or X): ")
-    player1[AGENT] = int(input("Player1: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent."))
-    player2[AGENT] = int(input("Player2: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent."))
+    player1[AGENT] = int(input("Player1: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent. "))
+    player2[AGENT] = int(input("Player2: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent. "))
     if player1[SYMBOL] == "0":
         player2[SYMBOL] = "x"
     else:
@@ -31,7 +31,7 @@ def initiate_game():
     
 def play(player1, player2, board):
     """ if user chooses to play another human, then we play using this simple function """
-
+    ut.print_board(board)
     num_turns = 0
     while True:
         if num_turns >= 9:

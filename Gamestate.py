@@ -17,62 +17,45 @@ class Gamestate:
         return f"board is {self.board}, player symbol is {self.player}, move to get to it is {self.move}"
 
     
-    def heuristic(self) -> int:
-        """ calculates how good a state is by counting the number of possible wins for that state """
-        
-        possible_wins = 0
-        
-        # get opponent's symbol
-        opponent = self.other
-
-        board = self.board
-        
-        # get all possible wins
-        piece_locs = [(board[combo[0]], board[combo[1], board[combo[2]]]) for combo in self.winning_combo]
-        for pieces in piece_locs:
-            if not (opponent in pieces):
-                possible_wins += 1
-        
-        return possible_wins
     
     def get_symbol(self):
         return self.player
         
-    def other(self):
+    def other_player(self):
         """ get opponent's symbol """
         if self.player == "0":
-            opponent = "X"
+            opponent = "x"
         else:
             opponent = "0"
         return opponent
 
     
-    def generate_children(self):
-        """ gnerate children of a given node """
+    def generate_children(self, player):
+        """ generate children of a given node """
 
         children = []
         board = []
         for i in range(len(self.board)):
             if ut.check_valid_move(i+1, self.board, debug=False):
                 board = copy.deepcopy(self.board)
-                board[i] = self.get_symbol()
-                child = Gamestate(board, self.other(), i)
+                board[i] = player
+                child = Gamestate(board, player, i)
                 children.append(child)
             board = []
         return children
 
         
-    def minimax(self, maximising) -> int:
+    def minimax(self, player, maximising) -> int:
         """ minimax search agent, usues simply heuristic function and searches terminally. returns next best move """
 
         # check if node is terminal node (i.e. win state)
-        if ut.check_winner(self.get_symbol(), self.board):
+        if ut.check_winner(self.player, self.board):
             if maximising:
                 return 1
             else:
                 return -1
         
-        if ut.check_winner(self.other(), self.board):
+        if ut.check_winner(self.other_player(), self.board):
             if maximising:
                 return -1
             else:
@@ -82,14 +65,15 @@ class Gamestate:
         if not (" " in self.board):
             return 0
         
-        
-        for child in self.generate_children():
+        if maximising:
+            value = -inf
+        else:
+            value = inf
+        for child in self.generate_children(player):
             if maximising:
-                value = -inf
-                value = max(value, child.minimax(False))
-            else:
-                value = inf    
-                value = min(value, child.minimax(True))
+                value = max(value, child.minimax(child.other_player(), False))
+            else:    
+                value = min(value, child.minimax(child.other_player(), True))
         
         return value
     

@@ -58,7 +58,7 @@ def check_winner(player, board):
                      (3, 4, 5), (6, 7, 8), (0, 4, 8), (2, 4, 6)]
 
     for combo in winning_combo:
-        idx1, idx2, idx3 = combo[0], combo[2], combo[2]
+        idx1, idx2, idx3 = combo[0], combo[1], combo[2]
         if (board[idx1] == board[idx2]) and (board[idx2] == board[idx3]) and  (board[idx3] == player):
             return WIN
     return not WIN
