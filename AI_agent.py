@@ -23,33 +23,14 @@ class AI_agent:
 
         # 2. need to perform first level of search
         evaluations = []
-        for child in initial_GS.generate_children(self.player):
-            evaluations.append((child.minimax(initial_GS.other_player(), False), child.move))
-
-        # 3. from list of children, return move that has highest value :)))
-        print(evaluations)
-        evaluations.sort()
-        evaluations = [eval for eval in evaluations if eval[0] >= 0]
-        options = []
-        print(evaluations)
-        # board = copy.deepcopy(self.board)
-        for option in evaluations:
-            self.board[option[1]] = self.player
-            options.append((self.heuristic(), option[1]))
-            self.board[option[1]] = " "
-
-        options.sort(key=lambda x: x[0])
-        print(options)
-        curr_max = 0
-        for option in options:
-            if option[0] > curr_max:
-                best_move = option[1]
-                curr_max = option[0]
         
-        if best_move:
-            return best_move
-        else:
-            # add so choose random lol
+        for child in initial_GS.generate_children(self.player):
+            print(child)
+            print(child.move)
+            evaluations.append((child.minimax(initial_GS.other_player(), False), child.move))
+        print(evaluations)
+        best = max(evaluations)[1]
+        return best
     
     def heuristic(self) -> int:
         """ calculates how good a state is by counting the number of possible wins for that state """

@@ -34,28 +34,21 @@ class Gamestate:
         """ generate children of a given node """
 
         children = []
-        board = []
         for i in range(len(self.board)):
             if ut.check_valid_move(i+1, self.board, debug=False):
                 board = copy.deepcopy(self.board)
                 board[i] = player
                 child = Gamestate(board, player, i)
                 children.append(child)
-            board = []
         return children
 
         
     def minimax(self, player, maximising) -> int:
+        assert len(self.board) == 9
         """ minimax search agent, usues simply heuristic function and searches terminally. returns next best move """
 
         # check if node is terminal node (i.e. win state)
         if ut.check_winner(self.player, self.board):
-            if maximising:
-                return 1
-            else:
-                return -1
-        
-        if ut.check_winner(self.other_player(), self.board):
             if maximising:
                 return -1
             else:
@@ -72,8 +65,8 @@ class Gamestate:
         for child in self.generate_children(player):
             if maximising:
                 value = max(value, child.minimax(child.other_player(), False))
+            # minimising
             else:    
                 value = min(value, child.minimax(child.other_player(), True))
         
         return value
-    

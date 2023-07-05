@@ -16,7 +16,7 @@ def initiate_game():
     """ begin game """
 
     player1, player2 = [0,0], [0,0]
-    player1[SYMBOL] = input("Player1: Enter the symbol you wish to play as (0 or X): ")
+    player1[SYMBOL] = input("Player1: Enter the symbol you wish to play as (0 or x): ")
     player1[AGENT] = int(input("Player1: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent. "))
     player2[AGENT] = int(input("Player2: Who do you wish to play as? Enter 0 for human, 1 for random agent, or 2 for AI agent. "))
     if player1[SYMBOL] == "0":
