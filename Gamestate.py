@@ -51,12 +51,6 @@ class Gamestate:
         # check if node is terminal node (i.e. win state)
         if ut.check_winner(self.player, self.board):
             if maximising:
-                return 1
-            else:
-                return -1
-        
-        if ut.check_winner(self.other_player(), self.board):
-            if maximising:
                 return -1
             else:
                 return 1
