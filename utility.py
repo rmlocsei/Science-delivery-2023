@@ -19,7 +19,10 @@ def print_board(board):
     print("-" * 13)
 
 def make_move(player, board, debug=True):
-    """ makes move on board """
+    """ makes move on board 
+        player = (SYMBOL, AGENT)
+    """
+
     if player[AGENT] == HUMAN:
         while True:
             move = int(input("Player: Enter a move between 1 and 9: "))
@@ -30,10 +33,12 @@ def make_move(player, board, debug=True):
         options = [i for i in range(len(board)) if board[i] == " "]
         move = choice(options)
         board[move] = player[SYMBOL]
+        return move # gui add on
     else:
         agent = ai.AI_agent(board, player[SYMBOL])
         best_move = agent.search()
         board[best_move] = player[SYMBOL]
+        return best_move # gui add on
         
 
 

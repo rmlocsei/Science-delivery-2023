@@ -25,10 +25,10 @@ class AI_agent:
         evaluations = []
         
         for child in initial_GS.generate_children(self.player):
-            print(child)
-            print(child.move)
+            # print(child)
+            # print(child.move)
             evaluations.append((child.minimax(initial_GS.other_player(), False), child.move))
-        print(evaluations)
+        # print(evaluations)
         best = max(evaluations)[1]
         return best
     
@@ -44,7 +44,7 @@ class AI_agent:
         
         # get all possible wins
         piece_locs = [(board[combo[0]], board[combo[1]], board[combo[2]]) for combo in self.winning_combo]
-        print("pieve_locs", piece_locs)
+        # print("pieve_locs", piece_locs)
         for pieces in piece_locs:
             if not (opponent in pieces) and self.player in pieces:
                 possible_wins += 1
