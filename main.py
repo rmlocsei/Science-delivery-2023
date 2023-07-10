@@ -270,6 +270,23 @@ def gui_board_to_rose_board(gui_board):
     
     return [mapper[gui_tolken] for gui_tolken in flattened]
 
+def blit_text(surface, text, pos, font, color=pg.Color('white')):
+    words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
+    space = font.size(' ')[0]  # The width of a space.
+    max_width, max_height = surface.get_size()
+    x, y = pos
+    for line in words:
+        for word in line:
+            word_surface = font.render(word, 0, color)
+            word_width, word_height = word_surface.get_size()
+            if x + word_width >= max_width:
+                x = pos[0]  # Reset the x.
+                y += word_height  # Start on new row.
+            surface.blit(word_surface, (x, y))
+            x += word_width + space
+        x = pos[0]  # Reset the x.
+        y += word_height  # Start on new row
+
 def game_setup():
     font = pg.font.SysFont("Arial", 36)
     txtsurf = font.render("Player1: Press 1 to play as 'x' or '0' to play as noughts", True, white)
@@ -308,7 +325,9 @@ font = pg.font.SysFont("Arial", 10)
 txtsurf1 = font.render("Player1: Press 1 to play as 'x' or '0' to play as noughts", True, white)
 txtsurf2 = font.render("Now choose who the first player is: Press 0 to play a other human, or 1 to play a RANDOM_AGENT, or 2 to play an AI_AGENT", True, white)
 txtsurf3 = font.render("Now choose who the second player is: Press 0 to play a other human, or 1 to play a RANDOM_AGENT, or 2 to play an AI_AGENT", True, white)
-
+text1 = "Player1: Press 1 to play as 'x' or '0' to play as noughts"
+text2 = "Now choose who the first player is: Press 0 to play a other human, or 1 to play a RANDOM_AGENT, or 2 to play an AI_AGENT"
+text3 = "Now choose who the second player is: Press 0 to play a other human, or 1 to play a RANDOM_AGENT, or 2 to play an AI_AGENT"
 message1 = True
 message2 = False
 message3 = False
@@ -318,18 +337,16 @@ player1 = []
 player2 = []
 
 players = [player1, player2]
-
-screen.blit(txtsurf1,(200 - txtsurf1.get_width() // 2, 150 - txtsurf1.get_height() // 2))
+blit_text(screen, text1, (20, 20), font)
+# screen.blit(txtsurf1,(200 - txtsurf1.get_width() // 2, 150 - txtsurf1.get_height() // 2))
 pg.display.update()
 
 #game_initiating_window()
 while(True):
     if not game_running:
         for event in pg.event.get():
-            print("enters for loop")
             if message1:
                 if event.type == pg.KEYDOWN:
-                    print("enters keydown, message1")
                     if event.key == pg.K_x:
                         players[0].append('x')
                         players[1].append('0')
@@ -341,7 +358,8 @@ while(True):
                     message1 = False
                     message2 = True
                     screen.fill((0,0,0))
-                    screen.blit(txtsurf2,(200 - txtsurf2.get_width() // 2, 150 - txtsurf2.get_height() // 2))
+                    blit_text(screen, text2, (20, 20), font)
+                    # screen.blit(txtsurf2,(200 - txtsurf2.get_width() // 2, 150 - txtsurf2.get_height() // 2))
                     pg.display.update()
             elif message2:
                 if event.type == pg.KEYDOWN:
@@ -358,7 +376,8 @@ while(True):
                     message2 = False
                     message3 = True
                     screen.fill((0,0,0))
-                    screen.blit(txtsurf3,(200 - txtsurf3.get_width() // 2, 150 - txtsurf3.get_height() // 2))
+                    blit_text(screen, text3, (20, 20), font)
+                    # screen.blit(txtsurf3,(200 - txtsurf3.get_width() // 2, 150 - txtsurf3.get_height() // 2))
                     pg.display.update()
 
             elif message3:
@@ -372,8 +391,7 @@ while(True):
                         players[1].append(2)
                     game_running = True
                     message2 = False
-                    print("gets to initiating window :0")
-                    print(players[0], players[1])
+                    player1, player2 = players
                     game_initiating_window()
 
         for event in pg.event.get():
@@ -384,22 +402,32 @@ while(True):
     if game_running:
         for event in pg.event.get():
             if event.type == QUIT:
-                print('quit')
                 pg.quit()
                 sys.exit()
             elif event.type == MOUSEBUTTONDOWN:
-                    user_click()
-                    rose_board = gui_board_to_rose_board(board)
-                    move = ut.make_move((play_as, 2), rose_board, False)
-                    row = move // 3 +1
-                    col = move % 3 +1
-                    print(rose_board)
-                    #board = rose_board_to_gui_board(rose_board)
-                
-                    drawXO(row, col)
-                    check_win()
-                    print(board)
-
+                    if player1[0] == "x": # player1 goes first      
+                        user_click()
+                        if(winner or draw):
+                            pg.quit()
+                            sys.exit()
+                        rose_board = gui_board_to_rose_board(board)
+                        move = ut.make_move(player2, rose_board, False)
+                        row = move // 3 +1
+                        col = move % 3 +1
+                        drawXO(row, col)
+                        check_win()
+                    else:
+                        XO = 'o'
+                        user_click()
+                        if(winner or draw):
+                            pg.quit()
+                            sys.exit()
+                        rose_board = gui_board_to_rose_board(board)
+                        move = ut.make_move(player2, rose_board, False)
+                        row = move // 3 +1
+                        col = move % 3 +1
+                        drawXO(row, col)
+                        check_win()
 
             if(winner or draw):
                 pg.quit()
