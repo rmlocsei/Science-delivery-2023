@@ -303,50 +303,84 @@ def game_setup():
             player2_agent = 2
     
     return ((player1_symbol, player1_agent), (player2_symbol, player2_agent))
-
-txtsurf1 = font.render("Player: Press 1 to play as 'x' or '0' to play as noughts", True, white)
-txtsurf2 = font.render("Player: Press 0 to play a other human, or 1 to play a RANDOM_AGENT, or 2 to play an AI_AGENT", True, white)
+white=(255,255,255)
+font = pg.font.SysFont("Arial", 10)
+txtsurf1 = font.render("Player1: Press 1 to play as 'x' or '0' to play as noughts", True, white)
+txtsurf2 = font.render("Now choose who the first player is: Press 0 to play a other human, or 1 to play a RANDOM_AGENT, or 2 to play an AI_AGENT", True, white)
+txtsurf3 = font.render("Now choose who the second player is: Press 0 to play a other human, or 1 to play a RANDOM_AGENT, or 2 to play an AI_AGENT", True, white)
 
 message1 = True
 message2 = False
+message3 = False
 
 game_running = False
 player1 = []
 player2 = []
 
+players = [player1, player2]
+
+screen.blit(txtsurf1,(200 - txtsurf1.get_width() // 2, 150 - txtsurf1.get_height() // 2))
+pg.display.update()
+
 #game_initiating_window()
 while(True):
     if not game_running:
-        if message1:
-            screen.blit(txtsurf1,(200 - txtsurf1.get_width() // 2, 150 - txtsurf1.get_height() // 2))
-            if pg.event.get()[0].type == pg.KEYDOWN:
-                if pg.event.get()[0].key == pg.K_x:
-                    player1.append('x')
-                    player2.append('0')
-                else:
-                    player1.append('0')
-                    player2.append('x')
-                message1 = False
-                message2 = True
-        elif message2:
-            screen.blit(txtsurf2,(200 - txtsurf2.get_width() // 2, 150 - txtsurf2.get_height() // 2))
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_0:
-                    player1.append(0)
-                elif event.key == pg.K_1:
-                    player1.append(1)
-                elif event.key == pg.K_2:
-                    player1.append(2)
-                message2 = False
-                game_running = True
+        for event in pg.event.get():
+            print("enters for loop")
+            if message1:
+                if event.type == pg.KEYDOWN:
+                    print("enters keydown, message1")
+                    if event.key == pg.K_x:
+                        players[0].append('x')
+                        players[1].append('0')
+                    elif event.key == pg.K_0:
+                        players[0].append('0')
+                        players[1].append('x')
+                    else:
+                        continue
+                    message1 = False
+                    message2 = True
+                    screen.fill((0,0,0))
+                    screen.blit(txtsurf2,(200 - txtsurf2.get_width() // 2, 150 - txtsurf2.get_height() // 2))
+                    pg.display.update()
+            elif message2:
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_0:
+                        players[0].append(0)
+                        
+                    elif event.key == pg.K_1:
+                        players[0].append(1)
 
-                game_initiating_window()
+                    elif event.key == pg.K_2:
+                        players[0].append(2)
+                    else:
+                        continue
+                    message2 = False
+                    message3 = True
+                    screen.fill((0,0,0))
+                    screen.blit(txtsurf3,(200 - txtsurf3.get_width() // 2, 150 - txtsurf3.get_height() // 2))
+                    pg.display.update()
+
+            elif message3:
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_0:
+                        players[1].append(0)
+                        
+                    elif event.key == pg.K_1:
+                        players[1].append(1)
+                    elif event.key == pg.K_2:
+                        players[1].append(2)
+                    game_running = True
+                    message2 = False
+                    print("gets to initiating window :0")
+                    print(players[0], players[1])
+                    game_initiating_window()
 
         for event in pg.event.get():
             if event.type == QUIT:
                 pg.quit()
                 sys.exit()
-
+    
     if game_running:
         for event in pg.event.get():
             if event.type == QUIT:
@@ -354,13 +388,6 @@ while(True):
                 pg.quit()
                 sys.exit()
             elif event.type == MOUSEBUTTONDOWN:
-                # player vs player
-                if player_vs_player:
-                    user_click()
-                # player vs AI
-                else:
-                    if human_is_naught:
-
                     user_click()
                     rose_board = gui_board_to_rose_board(board)
                     move = ut.make_move((play_as, 2), rose_board, False)
@@ -369,7 +396,6 @@ while(True):
                     print(rose_board)
                     #board = rose_board_to_gui_board(rose_board)
                 
-
                     drawXO(row, col)
                     check_win()
                     print(board)
